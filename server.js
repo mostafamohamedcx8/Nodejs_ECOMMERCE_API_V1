@@ -10,6 +10,7 @@ const ApiError = require("./utils/apiError");
 const GlobalError = require("./middleware/errorMiddleware");
 const dbconnection = require("./config/database");
 const MountRoutes = require("./routes");
+const WebhookCheckout = require("./services/orderservice");
 
 // connection with db
 dbconnection();
@@ -22,6 +23,13 @@ app.options("*", cors());
 
 // Enable gzip compression for responses
 app.use(compression());
+
+// checkout session
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  WebhookCheckout
+);
 
 // middlewares
 app.use(express.json());
