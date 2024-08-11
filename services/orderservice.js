@@ -1,4 +1,4 @@
-const Stripe = require("stripe")(process.env.STRIPE_SECRET);
+const Stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const asyncHandler = require("express-async-handler");
 const Factory = require("./handlerFactory");
 const Order = require("../models/orderModel");
@@ -131,7 +131,8 @@ exports.CheckOutSession = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, session });
 });
 
-exports.webhookcheckout = asyncHandler(async (req, res, next) => {
+// services/orderservice.js
+exports.WebhookCheckout = asyncHandler(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
 
   let event;
@@ -145,7 +146,7 @@ exports.webhookcheckout = asyncHandler(async (req, res, next) => {
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-  if (event) {
+  if (event.type === "checkout.session.completed") {
     console.log("create Order here");
   }
 });

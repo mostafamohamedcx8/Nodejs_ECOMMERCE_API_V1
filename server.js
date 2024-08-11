@@ -10,7 +10,7 @@ const ApiError = require("./utils/apiError");
 const GlobalError = require("./middleware/errorMiddleware");
 const dbconnection = require("./config/database");
 const MountRoutes = require("./routes");
-const WebhookCheckout = require("./services/orderservice");
+const { WebhookCheckout } = require("./services/orderservice");
 
 // connection with db
 dbconnection();
