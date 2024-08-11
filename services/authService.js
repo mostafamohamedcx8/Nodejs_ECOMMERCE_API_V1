@@ -51,7 +51,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
     return next(new ApiError("You are not logged in", 401));
   }
   //2- verify token (no change happen, expired token)
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
   // 3- check if user still exist
   const currentUser = await User.findById(decoded.userId);
   if (!currentUser) {
