@@ -5,6 +5,7 @@ const Order = require("../models/orderModel");
 const ApiError = require("../utils/apiError");
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModel");
+const User = require("../models/userModel");
 
 // @desc create cash order
 // @route post /api/v1/orders/cartId
@@ -131,6 +132,36 @@ exports.CheckOutSession = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, session });
 });
 
+const createCardOrder = async (session) => {
+  const cartId = session.client_reference_id;
+  const shippingAddress = session.metadata;
+  const orderprice = session.display_items[0].amount / 100;
+  const cart = await Cart.findById(cartId);
+  const user = await User.findOne({ email: session.customer_email });
+
+  // Create order with defualt paymentMethodType card
+  const order = await Order.create({
+    user: user._id,
+    cartItems: cart.cartitems,
+    shippingAddress,
+    totalorderprice: orderprice,
+    paymentMethod: "card",
+    ispaid: true,
+    paidAt: Date.now(),
+  });
+
+  if (order) {
+    const bulkOption = cart.cartitems.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product },
+        update: { $inc: { quantity: -item.quantity, sold: +item.quantity } },
+      },
+    }));
+    await Product.bulkWrite(bulkOption, {});
+    await Cart.findByIdAndDelete(cartId);
+  }
+};
+
 // services/orderservice.js
 exports.WebhookCheckout = asyncHandler(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
@@ -147,6 +178,7 @@ exports.WebhookCheckout = asyncHandler(async (req, res, next) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
   if (event.type === "checkout.session.completed") {
-    console.log("create Order here");
+    createCardOrder(event.data.object);
   }
+  res.status(200).json({ received: true });
 });
