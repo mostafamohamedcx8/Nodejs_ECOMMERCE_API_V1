@@ -1,6 +1,5 @@
-// stablishes a connection to a MongoDB database using Mongoose
-// It imports the mongoose library, which is used for interacting with MongoDB.
 const mongoose = require("mongoose");
+
 // It defines a function dbConnection which establishes a connection to the MongoDB
 const dbConnection = () => {
   mongoose.connect(process.env.DB_URI).then((conn) => {

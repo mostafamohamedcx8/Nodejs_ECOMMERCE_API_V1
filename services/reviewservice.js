@@ -1,20 +1,19 @@
-//module responsible for implementing brand-related services,
-// particularly handling HTTP requests related to Brands.
 const Factory = require("./handlerFactory");
 const Review = require("../models/reviewModel");
 
+// Nested route
+// GET /api/v1/products/:productId/reviews
 exports.CreateFilterObject = (req, res, next) => {
   let filterObject = {};
-  // eslint-disable-next-line no-unused-vars
   if (req.params.productId) filterObject = { product: req.params.productId };
   req.filterObj = filterObject;
   next();
 };
 
+// Nested route (Create)
 exports.SetproductIdandUserIdToBody = (req, res, next) => {
   if (!req.body.product) req.body.product = req.params.productId;
   if (!req.body.user) req.body.user = req.user._id;
-
   next();
 };
 

@@ -41,7 +41,7 @@ exports.removeAddressfromaddresses = asyncHandler(async (req, res, next) => {
   });
 });
 
-// desc get logged user address
+// desc get logged user addresses
 // route Post /api/vi/address
 // access protected/user
 

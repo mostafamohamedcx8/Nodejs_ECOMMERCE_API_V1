@@ -28,7 +28,7 @@ const userschema = new mongoose.Schema(
     imageProfile: String,
     role: { type: String, enum: ["user", "manager", "admin"], default: "user" },
     active: { type: Boolean, default: true },
-
+    // child reference (one to many)
     wishlist: [
       {
         type: mongoose.Schema.ObjectId,
@@ -52,7 +52,7 @@ const userschema = new mongoose.Schema(
 
 userschema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-
+  // Hashing user password
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });

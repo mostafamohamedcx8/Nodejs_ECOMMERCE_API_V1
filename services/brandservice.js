@@ -10,6 +10,7 @@ const Brand = require("../models/brandmodel");
 // upload single image
 exports.UploadBrandImage = uploadSingleImage("image");
 
+// Image processing
 exports.resizeimage = asyncHandler(async (req, res, next) => {
   const filename = `brand-${uuidv4()}-${Date.now()}.jpeg`;
   await sharp(req.file.buffer)

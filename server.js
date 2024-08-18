@@ -4,6 +4,9 @@ const compression = require("compression");
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
+const rateLimit = require("express-rate-limit");
+const hpp = require("hpp");
+const mongoSanitize = require("express-mongo-sanitize");
 
 dotenv.config({ path: "config.env" });
 const ApiError = require("./utils/apiError");
@@ -17,6 +20,7 @@ dbconnection();
 
 // express app
 const app = express();
+
 // Enable other domines
 app.use(cors());
 app.options("*", cors());
@@ -32,14 +36,30 @@ app.post(
 );
 
 // middlewares
-app.use(express.json());
+app.use(express.json({ limit: "20kb" }));
 app.use(express.static(path.join(__dirname, "uploads")));
 
-// eslint-disable-next-line eqeqeq
 if (process.env.NODE_ENV == "development") {
   app.use(morgan("dev"));
   console.log(`mode: ${process.env.NODE_ENV}`);
 }
+
+// To remove data using these defaults:
+app.use(mongoSanitize());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  message: "Too many requests, please try again later.",
+});
+
+// Apply the rate limiting middleware to all requests.
+app.use("/api", limiter);
+
+// selects the last parameter value.
+// app.use(hpp());
+
+app.use(hpp({ whitelist: ["price"] }));
 
 // Mount Routes
 MountRoutes(app);

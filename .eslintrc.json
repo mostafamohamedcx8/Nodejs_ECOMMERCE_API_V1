@@ -15,6 +15,7 @@
     "class-methods-use-this": "off",
     "node/no-unsupported-features/es-syntax": "off",
     "import/no-extraneous-dependencies": "off",
+    "no-use-before-define": "off",
     "eqeqeq": "off",
     "no-undef": "error",
     "prefer-destructuring": ["warn", { "object": true, "array": false }],

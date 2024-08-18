@@ -1,4 +1,3 @@
-// module that defines a Mongoose model for handling categories in a MongoDB database.
 const mongoose = require("mongoose");
 
 // create schema

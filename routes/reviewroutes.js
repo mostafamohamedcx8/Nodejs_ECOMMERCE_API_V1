@@ -1,8 +1,6 @@
-// module that defines the routes related to brands using the Express.js framework.
 const express = require("express");
 
 const {
-  // getBrandValidator,
   createReviewValidator,
   deletReviewValidator,
   updateReviewValidator,

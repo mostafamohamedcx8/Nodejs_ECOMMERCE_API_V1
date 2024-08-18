@@ -12,7 +12,6 @@ exports.addProductToWishList = asyncHandler(async (req, res, next) => {
     },
     { new: true }
   );
-
   res.status(200).json({
     status: "success",
     message: "product added successfully",

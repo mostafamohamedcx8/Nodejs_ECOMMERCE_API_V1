@@ -1,5 +1,3 @@
-//module responsible for implementing brand-related services,
-// particularly handling HTTP requests related to Brands.
 const asyncHandler = require("express-async-handler");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
@@ -88,11 +86,17 @@ exports.changeUserPassword = asyncHandler(async (req, res, next) => {
 // access Private
 exports.deletUser = Factory.DeletOne(User);
 
+// @desc    Get Logged user data
+// @route   GET /api/v1/users/getMe
+// @access  Private/Protect
 exports.getLoggedUserData = asyncHandler(async (req, res, next) => {
   req.params.id = req.user._id;
   next();
 });
 
+// @desc    Update logged user password
+// @route   PUT /api/v1/users/updateMyPassword
+// @access  Private/Protect
 exports.UpdateUserLoggedPassword = asyncHandler(async (req, res, next) => {
   // 1)update user password based on user payload(req.user._id)
   const user = await User.findByIdAndUpdate(
@@ -111,6 +115,9 @@ exports.UpdateUserLoggedPassword = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: user, token });
 });
 
+// @desc    Update logged user data (without password, role)
+// @route   PUT /api/v1/users/updateMe
+// @access  Private/Protect
 exports.UpdateLoggedUserData = asyncHandler(async (req, res, next) => {
   const updateduser = await User.findByIdAndUpdate(
     req.user._id,
@@ -125,6 +132,9 @@ exports.UpdateLoggedUserData = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: updateduser });
 });
 
+// @desc    Deactivate logged user
+// @route   DELETE /api/v1/users/deleteMe
+// @access  Private/Protect
 exports.deletUserLoggedData = asyncHandler(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user._id, { active: false });
   res.status(204).send();

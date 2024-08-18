@@ -6,6 +6,8 @@ exports.SetCategoryIdToBody = (req, res, next) => {
   next();
 };
 
+// Nested route
+// GET /api/v1/categories/:categoryId/subcategories
 exports.CreateFilterObject = (req, res, next) => {
   let filterObject = {};
   // eslint-disable-next-line no-unused-vars

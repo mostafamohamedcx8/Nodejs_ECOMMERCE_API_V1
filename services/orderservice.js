@@ -162,7 +162,9 @@ const createCardOrder = async (session) => {
   }
 };
 
-// services/orderservice.js
+// @desc    This webhook will run when stripe payment success paid
+// @route   POST /webhook-checkout
+// @access  Protected/User
 exports.WebhookCheckout = asyncHandler(async (req, res, next) => {
   const sig = req.headers["stripe-signature"];
 

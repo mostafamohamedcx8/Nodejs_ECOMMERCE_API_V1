@@ -140,6 +140,7 @@ exports.UpdateItemQuantity = asyncHandler(async (req, res, next) => {
 // access Private/User
 
 exports.applycoupon = asyncHandler(async (req, res, next) => {
+  // 1) Get coupon based on coupon name
   const coupon = await Coupon.findOne({
     name: req.body.name,
     expire: { $gt: Date.now() },
@@ -147,9 +148,12 @@ exports.applycoupon = asyncHandler(async (req, res, next) => {
   if (!coupon) {
     return next(new ApiError("Coupon not found", 404));
   }
+
+  // 2) Get logged user cart to get total cart price
   const cart = await Cart.findOne({ user: req.user._id });
   const totalprice = cart.Totalpricecart;
 
+  // 3) Calculate price after priceAfterDiscount
   const totalpriceAfterdiscount = (
     totalprice -
     (totalprice * coupon.discount) / 100

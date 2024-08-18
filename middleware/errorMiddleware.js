@@ -9,17 +9,11 @@ const handleJwtExpired = () =>
 const globalError = (err, req, res, next) => {
   err.statuscode = err.statuscode || 500;
   err.status = err.status || "error";
-  // eslint-disable-next-line eqeqeq
   if (process.env.NODE_ENV == "development") {
-    // eslint-disable-next-line no-use-before-define
     sendErrorForDev(err, res);
   } else {
-    // eslint-disable-next-line eqeqeq
     if (err.name == "JsonWebTokenError") err = handleJwtInvalidSignature();
-    // eslint-disable-next-line eqeqeq
     if (err.name == "TokenExpiredError") err = handleJwtExpired();
-
-    // eslint-disable-next-line no-use-before-define
     sendErrorForprod(err, res);
   }
 };

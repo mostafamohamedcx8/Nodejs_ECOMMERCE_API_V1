@@ -1,5 +1,3 @@
-//module responsible for implementing product-related services,
-// particularly handling HTTP requests related to products.
 const asyncHandler = require("express-async-handler");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");

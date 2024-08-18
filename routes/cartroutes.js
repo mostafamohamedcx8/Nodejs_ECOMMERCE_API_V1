@@ -1,4 +1,3 @@
-// module that defines the routes related to brands using the Express.js framework.
 const express = require("express");
 const authService = require("../services/authService");
 
